@@ -17,6 +17,8 @@ import ResourceRecommendations from "@/components/ResourceRecommendations";
 import GlobalProgressOverview from "@/components/GlobalProgressOverview";
 import ProgressActivities from "@/components/ProgressActivities";
 import NotesAndFiles from "@/components/NotesAndFiles";
+import AddSkillModal from "@/components/AddSkillModal";
+import { Sparkles } from "lucide-react";
 import {
   overviewChartData,
   goalTabs,
@@ -230,6 +232,7 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const { resetAll } = useResetAllData();
   const [confirmReset, setConfirmReset] = useState(false);
+  const [showAddSkill, setShowAddSkill] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -333,6 +336,13 @@ export default function Home() {
                 {tab.label}
               </button>
             ))}
+            <button
+              onClick={() => setShowAddSkill(true)}
+              className="ml-auto px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap flex items-center gap-1.5 bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 transition-all"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              Add Skill
+            </button>
           </div>
         </div>
       </section>
@@ -381,6 +391,17 @@ export default function Home() {
           )}
         </div>
       </footer>
+
+      {/* ── Add Skill Modal ── */}
+      <AddSkillModal
+        isOpen={showAddSkill}
+        onClose={() => setShowAddSkill(false)}
+        onAdd={(skill) => {
+          console.log("New skill generated:", skill);
+          setShowAddSkill(false);
+        }}
+        currentGoalCount={goalTabs.length}
+      />
     </div>
   );
 }
