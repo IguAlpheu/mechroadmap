@@ -1,9 +1,10 @@
 // ============================================================
-// Lumeo — AI Roadmap Generator (Gemini)
-// API key must be set in .env as VITE_GEMINI_API_KEY
+// Lumeo — AI Roadmap Generator (Groq)
+// API key must be set in .env as VITE_GROQ_API_KEY
+// Get a free key at: https://console.groq.com/keys
 // ============================================================
 
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
+const API_URL = `https://api.groq.com/openai/v1/chat/completions`;
 
 export interface StudyStep {
   id: number;
@@ -49,10 +50,10 @@ const COLORS = [
 ];
 
 function getApiKey(): string {
-  const key = import.meta.env.VITE_GEMINI_API_KEY;
+  const key = import.meta.env.VITE_GROQ_API_KEY;
   if (!key) {
     throw new Error(
-      "VITE_GEMINI_API_KEY is not set. Create a .env file in the project root with:\nVITE_GEMINI_API_KEY=your_key_here"
+      "VITE_GROQ_API_KEY is not set. Create a .env file in client/ with:\nVITE_GROQ_API_KEY=your_key_here\nGet a free key at https://console.groq.com/keys"
     );
   }
   return key;
@@ -134,16 +135,27 @@ Generate a complete, practical learning plan in JSON with EXACTLY this structure
 
 IMPORTANT: Use real, verified URLs. Be specific and practical. Return ONLY valid JSON.`;
 
-  const response = await fetch(`${API_URL}?key=${apiKey}`, {
+  const response = await fetch(API_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+    },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 2048,
-        responseMimeType: "application/json",
-      },
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert learning coach. Always respond with valid JSON only, no markdown, no explanation.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: 0.7,
+      max_tokens: 2048,
+      response_format: { type: "json_object" },
     }),
   });
 
@@ -151,11 +163,11 @@ IMPORTANT: Use real, verified URLs. Be specific and practical. Return ONLY valid
 
   if (!response.ok) {
     const message = data?.error?.message || `HTTP ${response.status}`;
-    throw new Error(`Gemini API error: ${message}`);
+    throw new Error(`Groq API error: ${message}`);
   }
 
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-  if (!text) throw new Error("Empty response from Gemini API.");
+  const text = data.choices?.[0]?.message?.content || "";
+  if (!text) throw new Error("Empty response from Groq API.");
 
   const clean = text.replace(/```json|```/g, "").trim();
   const parsed = JSON.parse(clean);
