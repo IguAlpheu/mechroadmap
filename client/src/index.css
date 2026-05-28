@@ -146,7 +146,15 @@ html { color-scheme: dark; }
   }
 
   /* Legacy alias */
-  .mission-card { @apply lumeo-card; }
+  .mission-card {
+    background: oklch(10% 0.022 240);
+    border: 1px solid oklch(100% 0 0 / 8%);
+    transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+  }
+  .mission-card:hover {
+    border-color: oklch(100% 0 0 / 14%);
+    box-shadow: 0 8px 32px oklch(0% 0 0 / 40%);
+  }
 
   /* ── Gradient text ── */
   .gradient-text-blue {
