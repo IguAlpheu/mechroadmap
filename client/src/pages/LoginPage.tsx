@@ -1,293 +1,241 @@
+// ============================================================
+// Lumeo — Login / Register Page
+// ============================================================
 import { useState, useEffect } from "react";
-import { quotes } from "@/data/quotes";
+import { useLocation } from "wouter";
+import { Zap, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
+import AuroraBackground from "@/components/AuroraBackground";
+import { getAuth, saveAuth, verifyAuth, isFirstTime, setSession } from "@/lib/storage";
 
 interface LoginPageProps {
   onLogin: () => void;
+  authed: boolean;
 }
 
-// Credentials stored in localStorage (simulated auth — no backend)
-const CREDS_KEY = "mechroadmap-credentials";
-const DEFAULT_USER = "admin";
-const DEFAULT_PASS = "roadmap2026";
-
-function getStoredCreds(): { username: string; password: string } {
-  try {
-    const raw = localStorage.getItem(CREDS_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {}
-  return { username: DEFAULT_USER, password: DEFAULT_PASS };
-}
-
-// Rotate quote every hour
-function getQuoteOfTheHour() {
-  const now = new Date();
-  const hourIndex = now.getFullYear() * 8760 + now.getMonth() * 744 + now.getDate() * 24 + now.getHours();
-  return quotes[hourIndex % quotes.length];
-}
-
-type View = "login" | "forgot";
-
-export default function LoginPage({ onLogin }: LoginPageProps) {
-  const [view, setView] = useState<View>("login");
-
-  // Login state
+export default function LoginPage({ onLogin, authed }: LoginPageProps) {
+  const [, navigate] = useLocation();
+  const [mode, setMode] = useState<"login" | "register">(
+    isFirstTime() ? "register" : "login"
+  );
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // Forgot password state
-  const [newUsername, setNewUsername] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [forgotMsg, setForgotMsg] = useState("");
-  const [forgotError, setForgotError] = useState("");
-
   const [visible, setVisible] = useState(false);
-  const [quoteVisible, setQuoteVisible] = useState(false);
-  const [quote, setQuote] = useState(getQuoteOfTheHour());
 
   useEffect(() => {
-    const t1 = setTimeout(() => setVisible(true), 100);
-    const t2 = setTimeout(() => setQuoteVisible(true), 600);
-    // Refresh quote every hour
-    const interval = setInterval(() => setQuote(getQuoteOfTheHour()), 60 * 60 * 1000);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearInterval(interval); };
-  }, []);
+    if (authed) navigate("/dashboard");
+    const t = setTimeout(() => setVisible(true), 60);
+    return () => clearTimeout(t);
+  }, [authed, navigate]);
 
-  function handleLogin() {
-    if (!username.trim() || !password.trim()) {
-      setError("Please fill in both fields.");
+  const handleSubmit = async () => {
+    setError("");
+    if (!username.trim() || !password) {
+      setError("Please fill in all fields.");
       return;
     }
-    const creds = getStoredCreds();
-    if (username.trim() === creds.username && password === creds.password) {
+
+    if (mode === "register") {
+      if (password.length < 6) {
+        setError("Password must be at least 6 characters.");
+        return;
+      }
+      if (password !== confirmPass) {
+        setError("Passwords don't match.");
+        return;
+      }
+      setLoading(true);
+      await new Promise((r) => setTimeout(r, 400));
+      saveAuth(username, password);
+      setSession(true);
       onLogin();
+      navigate("/dashboard");
     } else {
-      setError("Incorrect username or password.");
+      if (!getAuth()) {
+        setError("No account found. Please register first.");
+        setMode("register");
+        return;
+      }
+      setLoading(true);
+      await new Promise((r) => setTimeout(r, 400));
+      if (verifyAuth(username, password)) {
+        setSession(true);
+        onLogin();
+        navigate("/dashboard");
+      } else {
+        setLoading(false);
+        setError("Incorrect username or password.");
+      }
     }
-  }
+  };
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter") view === "login" ? handleLogin() : handleSaveCredentials();
-  }
-
-  function handleSaveCredentials() {
-    setForgotError("");
-    setForgotMsg("");
-    if (!newUsername.trim() || !newPassword.trim() || !confirmPassword.trim()) {
-      setForgotError("All fields are required.");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      setForgotError("Passwords do not match.");
-      return;
-    }
-    if (newPassword.length < 6) {
-      setForgotError("Password must be at least 6 characters.");
-      return;
-    }
-    localStorage.setItem(CREDS_KEY, JSON.stringify({ username: newUsername.trim(), password: newPassword }));
-    setForgotMsg("Credentials updated! You can now log in.");
-    setTimeout(() => {
-      setView("login");
-      setUsername(newUsername.trim());
-      setPassword("");
-      setForgotMsg("");
-      setNewUsername(""); setNewPassword(""); setConfirmPassword("");
-    }, 1800);
-  }
-
-  const inputStyle = {
-    background: "oklch(12% 0.025 240)",
-    border: "1px solid oklch(22% 0.03 240)",
+  const handleKey = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleSubmit();
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[oklch(5%_0.02_240)]">
-      {/* Edge glow */}
-      <div className="pointer-events-none absolute inset-0 z-0" style={{ boxShadow: "inset 0 0 120px 40px oklch(45% 0.25 240 / 0.35)" }} />
-      <div className="pointer-events-none absolute top-0 left-0 w-96 h-96 z-0 rounded-full" style={{ background: "radial-gradient(circle, oklch(50% 0.25 240 / 0.12) 0%, transparent 70%)", transform: "translate(-30%, -30%)" }} />
-      <div className="pointer-events-none absolute bottom-0 right-0 w-96 h-96 z-0 rounded-full" style={{ background: "radial-gradient(circle, oklch(50% 0.25 240 / 0.12) 0%, transparent 70%)", transform: "translate(30%, 30%)" }} />
-      <div className="absolute inset-0 starfield opacity-20 z-0" />
+    <div className="relative min-h-screen flex items-center justify-center px-4 bg-background overflow-hidden">
+      <AuroraBackground intensity="low" />
+      <div className="starfield absolute inset-0 opacity-20" />
 
+      {/* Back to landing */}
+      <button
+        onClick={() => navigate("/")}
+        className="absolute top-5 left-5 z-10 flex items-center gap-2 text-sm text-white/40 hover:text-white/80 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back
+      </button>
+
+      {/* Card */}
       <div
-        className="relative z-10 w-full max-w-md px-4"
+        className="relative z-10 w-full max-w-sm"
         style={{
           opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0)" : "translateY(24px)",
-          transition: "opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1), transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)",
+          transform: visible ? "translateY(0)" : "translateY(20px)",
+          transition: "opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out)",
         }}
       >
-        {/* Logo */}
-        <div className="text-center mb-10 space-y-3">
-          <span className="mono-label text-xs">OBJECTIVE PLANNER · 2026</span>
-          <h1 className="text-4xl font-black font-display text-white leading-tight">
-            Mechatronics<br />
-            <span className="gradient-text-blue">Roadmap</span>
-          </h1>
-          <p className="text-white/40 text-sm">
-            {view === "login" ? "Sign in to continue your journey" : "Reset your credentials"}
-          </p>
-        </div>
-
-        {/* Card */}
-        <div
-          className="mission-card rounded-2xl p-8 space-y-5"
-          style={{
-            background: "oklch(9% 0.02 240)",
-            border: "1px solid oklch(25% 0.05 240 / 0.8)",
-            boxShadow: "0 0 40px oklch(45% 0.25 240 / 0.08), 0 20px 60px rgba(0,0,0,0.5)",
-          }}
-        >
-          {view === "login" ? (
-            <>
-              {/* Username */}
-              <div className="space-y-2">
-                <label className="mono-label text-xs block">USERNAME</label>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => { setUsername(e.target.value); setError(""); }}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Enter your username"
-                  className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/25 outline-none transition-all duration-200"
-                  style={inputStyle}
-                  autoComplete="username"
-                />
+        <div className="lumeo-card rounded-2xl p-8 space-y-6">
+          {/* Logo */}
+          <div className="text-center space-y-3">
+            <div className="flex justify-center">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{
+                  background:
+                    "linear-gradient(135deg, oklch(60% 0.22 240), oklch(50% 0.24 240))",
+                  boxShadow: "0 0 20px oklch(58% 0.22 240 / 35%)",
+                }}
+              >
+                <Zap className="w-5 h-5 text-white" strokeWidth={2.5} />
               </div>
+            </div>
+            <div>
+              <h1 className="text-white font-bold text-xl">Lumeo</h1>
+              <p className="text-white/40 text-sm mt-0.5">
+                {mode === "register" ? "Create your account" : "Welcome back"}
+              </p>
+            </div>
+          </div>
 
-              {/* Password */}
-              <div className="space-y-2">
-                <label className="mono-label text-xs block">PASSWORD</label>
+          {/* Fields */}
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs text-white/40 mb-1.5 font-medium">
+                Username
+              </label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyDown={handleKey}
+                placeholder="yourname"
+                className="lumeo-input"
+                autoFocus
+                disabled={loading}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs text-white/40 mb-1.5 font-medium">
+                Password
+              </label>
+              <div className="relative">
                 <input
-                  type="password"
+                  type={showPass ? "text" : "password"}
                   value={password}
-                  onChange={(e) => { setPassword(e.target.value); setError(""); }}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Enter your password"
-                  className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/25 outline-none transition-all duration-200"
-                  style={inputStyle}
-                  autoComplete="current-password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKey}
+                  placeholder="••••••••"
+                  className="lumeo-input pr-10"
+                  disabled={loading}
                 />
-              </div>
-
-              {/* Forgot password link */}
-              <div className="flex justify-end -mt-2">
                 <button
-                  onClick={() => { setView("forgot"); setError(""); }}
-                  className="text-xs text-blue-400/70 hover:text-blue-300 transition-colors"
+                  type="button"
+                  onClick={() => setShowPass((p) => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors"
                 >
-                  Forgot credentials?
+                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+            </div>
 
-              {error && <p className="text-xs text-red-400/80 text-center">{error}</p>}
-
-              <button
-                onClick={handleLogin}
-                className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all duration-200 active:scale-95"
-                style={{
-                  background: "linear-gradient(135deg, oklch(55% 0.22 240), oklch(45% 0.25 240))",
-                  boxShadow: "0 0 24px oklch(50% 0.25 240 / 0.3)",
-                }}
-              >
-                Enter
-              </button>
-
-              <div className="flex items-center gap-3 pt-1">
-                <div className="flex-1 h-px bg-white/5" />
-                <span className="text-white/20 text-xs">quote of the hour</span>
-                <div className="flex-1 h-px bg-white/5" />
-              </div>
-
-              {/* Quote — rotates every hour */}
-              <div
-                className="pt-1 text-center space-y-2"
-                style={{
-                  opacity: quoteVisible ? 1 : 0,
-                  transform: quoteVisible ? "translateY(0)" : "translateY(10px)",
-                  transition: "opacity 0.7s ease, transform 0.7s ease",
-                }}
-              >
-                <p className="text-white/50 text-sm italic leading-relaxed">"{quote.text}"</p>
-                <p className="mono-label text-xs" style={{ color: "oklch(55% 0.18 240)" }}>— {quote.author}</p>
-              </div>
-            </>
-          ) : (
-            <>
-              {/* Forgot / Reset credentials */}
-              <p className="text-xs text-white/50 leading-relaxed">
-                Set a new username and password. These are stored locally in your browser.
-              </p>
-
-              <div className="space-y-2">
-                <label className="mono-label text-xs block">NEW USERNAME</label>
-                <input
-                  type="text"
-                  value={newUsername}
-                  onChange={(e) => { setNewUsername(e.target.value); setForgotError(""); }}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Choose a username"
-                  className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/25 outline-none transition-all duration-200"
-                  style={inputStyle}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="mono-label text-xs block">NEW PASSWORD</label>
+            {mode === "register" && (
+              <div>
+                <label className="block text-xs text-white/40 mb-1.5 font-medium">
+                  Confirm password
+                </label>
                 <input
                   type="password"
-                  value={newPassword}
-                  onChange={(e) => { setNewPassword(e.target.value); setForgotError(""); }}
-                  onKeyDown={handleKeyDown}
-                  placeholder="At least 6 characters"
-                  className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/25 outline-none transition-all duration-200"
-                  style={inputStyle}
+                  value={confirmPass}
+                  onChange={(e) => setConfirmPass(e.target.value)}
+                  onKeyDown={handleKey}
+                  placeholder="••••••••"
+                  className="lumeo-input"
+                  disabled={loading}
                 />
               </div>
+            )}
+          </div>
 
-              <div className="space-y-2">
-                <label className="mono-label text-xs block">CONFIRM PASSWORD</label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => { setConfirmPassword(e.target.value); setForgotError(""); }}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Repeat your password"
-                  className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/25 outline-none transition-all duration-200"
-                  style={inputStyle}
-                />
-              </div>
-
-              {forgotError && <p className="text-xs text-red-400/80 text-center">{forgotError}</p>}
-              {forgotMsg && <p className="text-xs text-green-400/80 text-center">{forgotMsg}</p>}
-
-              <button
-                onClick={handleSaveCredentials}
-                className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all duration-200 active:scale-95"
-                style={{
-                  background: "linear-gradient(135deg, oklch(55% 0.22 240), oklch(45% 0.25 240))",
-                  boxShadow: "0 0 24px oklch(50% 0.25 240 / 0.3)",
-                }}
-              >
-                Save New Credentials
-              </button>
-
-              <button
-                onClick={() => { setView("login"); setForgotError(""); setForgotMsg(""); }}
-                className="w-full py-2 text-xs text-white/40 hover:text-white/60 transition-colors"
-              >
-                ← Back to login
-              </button>
-            </>
+          {/* Error */}
+          {error && (
+            <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+              {error}
+            </p>
           )}
+
+          {/* Submit */}
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="lumeo-btn w-full flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                {mode === "register" ? "Creating account..." : "Signing in..."}
+              </>
+            ) : mode === "register" ? (
+              "Create account"
+            ) : (
+              "Sign in"
+            )}
+          </button>
+
+          {/* Switch mode */}
+          <p className="text-center text-xs text-white/35">
+            {mode === "register" ? (
+              <>
+                Already have an account?{" "}
+                <button
+                  onClick={() => { setMode("login"); setError(""); }}
+                  className="text-primary hover:text-primary-light transition-colors"
+                >
+                  Sign in
+                </button>
+              </>
+            ) : (
+              <>
+                No account yet?{" "}
+                <button
+                  onClick={() => { setMode("register"); setError(""); }}
+                  className="text-primary hover:text-primary-light transition-colors"
+                >
+                  Create one
+                </button>
+              </>
+            )}
+          </p>
         </div>
 
-        {view === "login" && (
-          <p className="text-center text-white/20 text-xs mt-6">
-            Default credentials: <span className="text-white/35">admin / roadmap2026</span>
-          </p>
-        )}
+        <p className="text-center text-xs text-white/20 mt-5">
+          Your data is stored locally on your device.
+        </p>
       </div>
     </div>
   );

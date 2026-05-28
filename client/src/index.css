@@ -43,412 +43,212 @@
 }
 
 /* ============================================================
-   MECHATRONICS ROADMAP — Dark Space Theme
-   Design: Deep dark navy/black background, neon blue accents,
-   monospace labels, Outfit display font, JetBrains Mono code font
+   LUMEO — Dark Space Theme
+   Deep dark background · Electric blue accents · Outfit + JetBrains Mono
    ============================================================ */
 
 :root {
-  /* ── Spacing System ── */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-  --spacing-3xl: 4rem;
-  
-  /* ── Typography Hierarchy ── */
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  --text-5xl: 3rem;
-  --text-6xl: 3.75rem;
-  --text-7xl: 4.5rem;
-  
-  /* ── Border Radius ── */
   --radius: 0.75rem;
-  
-  /* ── Colors (Dark Space Theme) ── */
-  --background: oklch(7% 0.02 240);
-  --foreground: oklch(92% 0.01 220);
-  --card: oklch(11% 0.025 240);
-  --card-foreground: oklch(92% 0.01 220);
-  --popover: oklch(11% 0.025 240);
-  --popover-foreground: oklch(92% 0.01 220);
-  
-  /* ── Primary (Neon Blue) ── */
-  --primary: oklch(60% 0.2 240);
-  --primary-foreground: oklch(98% 0 0);
-  --primary-light: oklch(70% 0.15 240);
-  --primary-dark: oklch(50% 0.25 240);
-  
-  /* ── Secondary ── */
-  --secondary: oklch(15% 0.02 240);
-  --secondary-foreground: oklch(85% 0.01 220);
-  
-  /* ── Muted (Subtle backgrounds) ── */
-  --muted: oklch(15% 0.02 240);
-  --muted-foreground: oklch(60% 0.01 220);
-  
-  /* ── Accent (Cyan/Teal) ── */
-  --accent: oklch(55% 0.18 165);
-  --accent-foreground: oklch(98% 0 0);
-  --accent-light: oklch(65% 0.15 165);
-  --accent-dark: oklch(45% 0.2 165);
-  
-  /* ── Destructive ── */
-  --destructive: oklch(65% 0.22 25);
+
+  /* ── Lumeo Dark Theme ── */
+  --background: oklch(6% 0.018 240);
+  --foreground: oklch(93% 0.008 220);
+  --card: oklch(10% 0.022 240);
+  --card-foreground: oklch(93% 0.008 220);
+  --popover: oklch(10% 0.022 240);
+  --popover-foreground: oklch(93% 0.008 220);
+  --primary: oklch(58% 0.22 240);
+  --primary-foreground: oklch(98% 0.005 240);
+  --primary-light: oklch(68% 0.2 240);
+  --secondary: oklch(14% 0.025 240);
+  --secondary-foreground: oklch(75% 0.015 240);
+  --muted: oklch(13% 0.02 240);
+  --muted-foreground: oklch(55% 0.02 240);
+  --accent: oklch(14% 0.025 240);
+  --accent-foreground: oklch(93% 0.008 220);
+  --destructive: oklch(62% 0.22 25);
   --destructive-foreground: oklch(98% 0 0);
-  
-  /* ── Borders & Inputs ── */
-  --border: oklch(22% 0.03 240);
-  --input: oklch(18% 0.025 240);
-  --ring: oklch(60% 0.2 240);
-  
-  /* ── Chart Colors (Consistent palette) ── */
-  --chart-1: oklch(60% 0.2 240);   /* Blue */
-  --chart-2: oklch(55% 0.18 165);  /* Cyan */
-  --chart-3: oklch(70% 0.18 55);   /* Yellow */
-  --chart-4: oklch(65% 0.22 300);  /* Purple */
-  --chart-5: oklch(60% 0.2 25);    /* Red */
-  
-  /* ── Sidebar ── */
+  --border: oklch(100% 0 0 / 8%);
+  --input: oklch(100% 0 0 / 10%);
+  --ring: oklch(58% 0.22 240);
+
+  /* Charts */
+  --chart-1: var(--color-blue-400);
+  --chart-2: var(--color-indigo-400);
+  --chart-3: var(--color-violet-400);
+  --chart-4: var(--color-blue-600);
+  --chart-5: var(--color-blue-800);
+
+  /* Sidebar */
   --sidebar: oklch(9% 0.02 240);
-  --sidebar-foreground: oklch(92% 0.01 220);
-  --sidebar-primary: oklch(60% 0.2 240);
-  --sidebar-primary-foreground: oklch(98% 0 0);
-  --sidebar-accent: oklch(15% 0.02 240);
-  --sidebar-accent-foreground: oklch(92% 0.01 220);
-  --sidebar-border: oklch(22% 0.03 240);
-  --sidebar-ring: oklch(60% 0.2 240);
-  
-  /* ── Text Opacity Levels (for hierarchy) ── */
-  --text-primary: 1;
-  --text-secondary: 0.7;
-  --text-tertiary: 0.5;
-  --text-disabled: 0.3;
+  --sidebar-foreground: oklch(93% 0.008 220);
+  --sidebar-primary: oklch(58% 0.22 240);
+  --sidebar-primary-foreground: oklch(98% 0.005 240);
+  --sidebar-accent: oklch(14% 0.025 240);
+  --sidebar-accent-foreground: oklch(93% 0.008 220);
+  --sidebar-border: oklch(100% 0 0 / 7%);
+  --sidebar-ring: oklch(58% 0.22 240);
+
+  /* Custom easing */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
+/* Force dark everywhere */
+html { color-scheme: dark; }
+
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  
+  * { @apply border-border outline-ring/50; }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Nunito Sans', sans-serif;
-    line-height: 1.6;
-    color: rgba(var(--foreground-rgb), var(--text-primary, 1));
+    font-family: 'Outfit', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
-  
-  /* ── Typography Hierarchy ── */
-  h1 {
-    font-size: var(--text-7xl);
-    font-weight: 900;
-    line-height: 1.1;
-    margin-bottom: var(--spacing-lg);
-  }
-  
-  h2 {
-    font-size: var(--text-2xl);
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', system-ui, sans-serif;
     font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: var(--spacing-md);
   }
-  
-  h3 {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    line-height: 1.4;
-    margin-bottom: var(--spacing-sm);
-  }
-  
-  p {
-    font-size: var(--text-base);
-    line-height: 1.6;
-    margin-bottom: var(--spacing-md);
-    color: rgba(var(--foreground-rgb), var(--text-secondary, 0.7));
-  }
-  
-  small {
-    font-size: var(--text-xs);
-    color: rgba(var(--foreground-rgb), var(--text-tertiary, 0.5));
-  }
-  
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
-  [type="button"]:not(:disabled),
-  [type="submit"]:not(:disabled),
-  [type="reset"]:not(:disabled),
   a[href],
   select:not(:disabled),
   input[type="checkbox"]:not(:disabled),
-  input[type="radio"]:not(:disabled) {
-    @apply cursor-pointer;
-  }
+  input[type="radio"]:not(:disabled) { @apply cursor-pointer; }
+  button:not(:disabled):active { transform: scale(0.97); }
 }
 
 @layer components {
-  /* ── Container with responsive spacing ── */
   .container {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
-
-  .flex {
-    min-height: 0;
-    min-width: 0;
-  }
-
   @media (min-width: 640px) {
-    .container {
-      padding-left: var(--spacing-lg);
-      padding-right: var(--spacing-lg);
-    }
+    .container { padding-left: 1.5rem; padding-right: 1.5rem; }
   }
-
   @media (min-width: 1024px) {
-    .container {
-      padding-left: var(--spacing-xl);
-      padding-right: var(--spacing-xl);
-      max-width: 1280px;
-    }
-  }
-  
-  /* ── Spacing utilities ── */
-  .space-section {
-    padding: var(--spacing-3xl) var(--spacing-md);
-  }
-  
-  .space-card {
-    padding: var(--spacing-lg);
-  }
-  
-  .space-compact {
-    padding: var(--spacing-md);
-  }
-  
-  @media (min-width: 768px) {
-    .space-section {
-      padding: var(--spacing-3xl) var(--spacing-xl);
-    }
+    .container { padding-left: 2rem; padding-right: 2rem; max-width: 1200px; }
   }
 
-  /* ── Mission Card (consistent color & spacing) ── */
-  .mission-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  .flex { min-height: 0; min-width: 0; }
+
+  /* ── Lumeo Glass Card ── */
+  .lumeo-card {
+    background: oklch(10% 0.022 240);
+    border: 1px solid oklch(100% 0 0 / 8%);
+    transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+  }
+  .lumeo-card:hover {
+    border-color: oklch(100% 0 0 / 14%);
+    box-shadow: 0 8px 32px oklch(0% 0 0 / 40%);
   }
 
-  .mission-card:hover {
-    border-color: var(--primary);
-    transform: translateY(-2px);
-    box-shadow: 0 0 30px color-mix(in oklch, var(--primary) 15%, transparent), 0 8px 32px rgba(0, 0, 0, 0.4);
+  /* Legacy alias */
+  .mission-card { @apply lumeo-card; }
+
+  /* ── Gradient text ── */
+  .gradient-text-blue {
+    background: linear-gradient(135deg, oklch(72% 0.2 240), oklch(58% 0.22 240));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  /* ── Starfield background ── */
-  .starfield {
-    background-image:
-      radial-gradient(1px 1px at 20% 30%, rgba(222,222,222,0.6), transparent),
-      radial-gradient(1px 1px at 80% 10%, rgba(222,222,222,0.4), transparent),
-      radial-gradient(1.5px 1.5px at 50% 60%, rgba(222,222,222,0.5), transparent),
-      radial-gradient(1px 1px at 10% 80%, rgba(222,222,222,0.3), transparent),
-      radial-gradient(1px 1px at 90% 70%, rgba(222,222,222,0.4), transparent),
-      radial-gradient(1px 1px at 35% 15%, rgba(222,222,222,0.5), transparent),
-      radial-gradient(1.5px 1.5px at 65% 85%, rgba(222,222,222,0.3), transparent);
-  }
-
-  /* ── Mono label (consistent color) ── */
+  /* ── Mono label ── */
   .mono-label {
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--primary);
     font-family: 'JetBrains Mono', monospace;
-    font-size: var(--text-xs);
+    color: oklch(58% 0.22 240);
+    letter-spacing: 0.08em;
+    font-size: 0.7rem;
+    text-transform: uppercase;
     font-weight: 500;
   }
 
-  /* ── Gradient texts ── */
-  .gradient-text-blue {
-    -webkit-text-fill-color: transparent;
-    background: linear-gradient(135deg, #46b9ff, #00b1ea, #00a8cb 50%, #009298);
-    -webkit-background-clip: text;
-    background-clip: text;
-  }
-
-  .gradient-text-green {
-    -webkit-text-fill-color: transparent;
-    background: linear-gradient(135deg, #00cc95, #00ab61, #008a24);
-    -webkit-background-clip: text;
-    background-clip: text;
-  }
-
-  /* ── Display font ── */
-  .font-display {
-    font-family: 'Outfit', sans-serif;
-  }
-
-  /* ── Animations ── */
-  .animate-fade-in-up {
-    animation: fadeInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-  }
-  
-  /* ── Smooth transitions ── */
-  .transition-smooth {
-    transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  
-  .transition-fast {
-    transition: all 0.15s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  
-  /* ── Focus states for accessibility ── */
-  button:focus-visible,
-  a:focus-visible,
-  input:focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
-  }
-
   /* ── Scrollbar hide ── */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-  /* ── Micro-interactions: Button Press Effect ── */
-  button:not(:disabled),
-  [role="button"]:not([aria-disabled="true"]) {
-    @apply transition-all duration-150 ease-out;
+  /* ── Input base style ── */
+  .lumeo-input {
+    background: oklch(100% 0 0 / 5%);
+    border: 1px solid oklch(100% 0 0 / 10%);
+    color: oklch(93% 0.008 220);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+    width: 100%;
   }
-
-  button:active:not(:disabled),
-  [role="button"]:active:not([aria-disabled="true"]) {
-    @apply transform scale-95;
+  .lumeo-input:focus {
+    border-color: oklch(58% 0.22 240 / 60%);
+    box-shadow: 0 0 0 3px oklch(58% 0.22 240 / 12%);
   }
+  .lumeo-input::placeholder { color: oklch(93% 0.008 220 / 30%); }
 
-  /* ── Micro-interactions: Hover Glow ── */
-  button:hover:not(:disabled),
-  [role="button"]:hover:not([aria-disabled="true"]) {
-    @apply shadow-lg;
+  /* ── Primary button ── */
+  .lumeo-btn {
+    background: linear-gradient(135deg, oklch(60% 0.22 240), oklch(52% 0.24 240));
+    color: oklch(98% 0.005 240);
+    font-weight: 600;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    border: none;
+    transition: opacity 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+    box-shadow: 0 0 20px oklch(58% 0.22 240 / 25%);
   }
-
-  /* ── Micro-interactions: Tab Focus ── */
-  button:focus-visible,
-  [role="button"]:focus-visible,
-  a:focus-visible {
-    @apply outline-2 outline-offset-2 outline-primary;
+  .lumeo-btn:hover:not(:disabled) {
+    opacity: 0.9;
+    box-shadow: 0 0 28px oklch(58% 0.22 240 / 40%);
   }
+  .lumeo-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* ── Micro-interactions: Card Hover Lift ── */
-  .mission-card {
-    @apply transition-all duration-300 ease-out;
-  }
-
-  .mission-card:hover {
-    @apply -translate-y-1 shadow-xl;
-  }
-
-  /* ── Micro-interactions: Link Underline Animation ── */
-  a:not([class*="mission-card"]) {
-    @apply relative transition-colors duration-200;
-  }
-
-  a:hover:not([class*="mission-card"]) {
-    @apply text-primary;
-  }
-
-  /* ── Micro-interactions: Input Focus ── */
-  input:focus,
-  textarea:focus,
-  select:focus {
-    @apply ring-2 ring-primary/50 ring-offset-2 ring-offset-background transition-all duration-200;
-  }
-
-  /* ── Micro-interactions: Badge Pulse ── */
-  .badge-pulse {
-    animation: pulse-glow 2s infinite;
-  }
-
-  /* ── Micro-interactions: Smooth Transitions ── */
-  .transition-smooth {
-    @apply transition-all duration-300 ease-out;
-  }
-
-  .transition-fast {
-    @apply transition-all duration-150 ease-out;
-  }
-
-  /* ── Micro-interactions: Checkbox/Radio Glow ── */
-  input[type="checkbox"]:checked,
-  input[type="radio"]:checked {
-    @apply shadow-lg shadow-primary/50;
-  }
-
-  /* ── Micro-interactions: Slider Thumb Glow ── */
-  input[type="range"]::-webkit-slider-thumb {
-    @apply shadow-lg shadow-primary/50 transition-shadow duration-200;
-  }
-
-  input[type="range"]::-webkit-slider-thumb:hover {
-    @apply shadow-xl shadow-primary/70;
-  }
-
-  /* ── Micro-interactions: Smooth Scroll ── */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  /* ── Micro-interactions: Selection Highlight ── */
-  ::selection {
-    @apply bg-primary/30 text-primary;
-  }
-
-  /* ── Micro-interactions: Spinner Animation ── */
-  .animate-spin-smooth {
-    animation: spin-smooth 2s linear infinite;
+  /* ── Starfield ── */
+  .starfield {
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, oklch(90% 0 0 / 70%) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 10%, oklch(90% 0 0 / 60%) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 50% 60%, oklch(90% 0 0 / 50%) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 70%, oklch(90% 0 0 / 40%) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 80%, oklch(90% 0 0 / 60%) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 85%, oklch(90% 0 0 / 30%) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 65% 20%, oklch(90% 0 0 / 50%) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 40%, oklch(90% 0 0 / 40%) 0%, transparent 100%),
+      radial-gradient(1px 1px at 95% 50%, oklch(90% 0 0 / 35%) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 15%, oklch(90% 0 0 / 55%) 0%, transparent 100%);
   }
 }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ── Aurora animations ── */
+@keyframes aurora-drift-1 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); opacity: 0.55; }
+  30%  { transform: translate(-9%, 5%) scale(1.08); opacity: 0.75; }
+  60%  { transform: translate(6%, -7%) scale(0.94); opacity: 0.45; }
+}
+@keyframes aurora-drift-2 {
+  0%, 100% { transform: translate(0%, 0%) scale(1.04); opacity: 0.45; }
+  40%  { transform: translate(8%, 4%) scale(0.92); opacity: 0.65; }
+  70%  { transform: translate(-5%, -8%) scale(1.1); opacity: 0.55; }
+}
+@keyframes aurora-drift-3 {
+  0%, 100% { transform: translate(0%, 0%) scale(0.96); opacity: 0.65; }
+  25%  { transform: translate(9%, -6%) scale(1.06); opacity: 0.45; }
+  75%  { transform: translate(-7%, 7%) scale(1.02); opacity: 0.75; }
+}
+@keyframes aurora-drift-4 {
+  0%, 100% { transform: translate(0%, 0%) scale(1.02); opacity: 0.35; }
+  50%  { transform: translate(-10%, 3%) scale(0.95); opacity: 0.55; }
 }
 
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(70, 185, 255, 0.7);
-  }
-  50% {
-    box-shadow: 0 0 0 8px rgba(70, 185, 255, 0);
-  }
+/* ── Fade-in-up ── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+.animate-fade-in-up { animation: fade-in-up 0.5s var(--ease-out) forwards; }
 
-@keyframes spin-smooth {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* ── Transition utilities ── */
+.transition-smooth { transition: all 200ms var(--ease-out); }
