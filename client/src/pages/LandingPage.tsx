@@ -2,7 +2,7 @@
 // Lumeo — Landing Page
 // ============================================================
 import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useHashLocation as useLocation } from "wouter/use-hash-location";
 import { ArrowRight, Zap, Map, TrendingUp, BookOpen, CheckCircle2 } from "lucide-react";
 import AuroraBackground from "@/components/AuroraBackground";
 

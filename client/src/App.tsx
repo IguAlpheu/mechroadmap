@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Switch } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -37,7 +38,7 @@ function Protected({
   children: React.ReactNode;
   authed: boolean;
 }) {
-  const [, navigate] = useLocation();
+  const [location, navigate] = useHashLocation();
   useEffect(() => {
     if (!authed) navigate("/login");
   }, [authed, navigate]);
@@ -55,7 +56,7 @@ function Router({
   logout: () => void;
 }) {
   return (
-    <Switch>
+    <Switch hook={useHashLocation}>
       <Route path="/" component={() => <LandingPage authed={authed} />} />
       <Route path="/login" component={() => <LoginPage onLogin={login} authed={authed} />} />
       <Route

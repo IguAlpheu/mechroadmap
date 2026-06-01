@@ -2,7 +2,7 @@
 // Lumeo — Skill View (full roadmap detail page)
 // ============================================================
 import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useHashLocation as useLocation } from "wouter/use-hash-location";
 import {
   ArrowLeft, Flame, CheckCircle2, Circle,
   ExternalLink, Clock, LogOut, Zap, BookOpen,

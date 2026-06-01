@@ -2,7 +2,7 @@
 // Lumeo — Dashboard
 // ============================================================
 import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useHashLocation as useLocation } from "wouter/use-hash-location";
 import {
   Plus, LogOut, Zap, Sparkles, X, Loader2,
   TrendingUp, Clock, Flame, ChevronRight

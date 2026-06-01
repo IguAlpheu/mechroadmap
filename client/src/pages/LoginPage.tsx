@@ -2,7 +2,7 @@
 // Lumeo — Login / Register Page
 // ============================================================
 import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useHashLocation as useLocation } from "wouter/use-hash-location";
 import { Zap, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
 import AuroraBackground from "@/components/AuroraBackground";
 import { getAuth, saveAuth, verifyAuth, isFirstTime, setSession } from "@/lib/storage";
