@@ -38,7 +38,7 @@
 
 /* ============================================================
    LUMEO — Premium Gold Theme
-   Dark: #080808 · Light: #F9F6F0 · Accent: Gold
+   Dark: #0A0905 · Light: #FAF7EF · Accent: Rich Gold
    ============================================================ */
 
 /* ── DARK MODE (default) ── */
@@ -46,39 +46,39 @@
   --radius: 0.75rem;
   color-scheme: dark;
 
-  /* Core */
-  --background:        oklch(5.5% 0.008 60);
-  --foreground:        oklch(94% 0.006 60);
-  --card:              oklch(8.5% 0.010 60);
-  --card-foreground:   oklch(94% 0.006 60);
-  --popover:           oklch(8.5% 0.010 60);
-  --popover-foreground: oklch(94% 0.006 60);
+  /* Core — near-black with warm undertone */
+  --background:        oklch(6% 0.010 70);
+  --foreground:        oklch(93% 0.008 70);
+  --card:              oklch(9% 0.012 70);
+  --card-foreground:   oklch(93% 0.008 70);
+  --popover:           oklch(9% 0.012 70);
+  --popover-foreground: oklch(93% 0.008 70);
 
-  /* Gold accent */
-  --primary:           oklch(76% 0.16 82);
-  --primary-foreground: oklch(10% 0.01 60);
-  --primary-dim:       oklch(65% 0.14 82);
-  --primary-glow:      oklch(76% 0.16 82 / 25%);
+  /* Gold accent — rich, warm, unmistakable */
+  --primary:           oklch(80% 0.20 84);
+  --primary-foreground: oklch(8% 0.012 70);
+  --primary-dim:       oklch(70% 0.18 82);
+  --primary-glow:      oklch(80% 0.20 84 / 30%);
 
-  --secondary:         oklch(12% 0.012 60);
-  --secondary-foreground: oklch(75% 0.008 60);
-  --muted:             oklch(11% 0.010 60);
-  --muted-foreground:  oklch(50% 0.010 60);
-  --accent:            oklch(12% 0.012 60);
-  --accent-foreground: oklch(94% 0.006 60);
+  --secondary:         oklch(13% 0.014 70);
+  --secondary-foreground: oklch(72% 0.010 70);
+  --muted:             oklch(12% 0.012 70);
+  --muted-foreground:  oklch(52% 0.012 70);
+  --accent:            oklch(13% 0.014 70);
+  --accent-foreground: oklch(93% 0.008 70);
   --destructive:       oklch(60% 0.22 25);
-  --border:            oklch(100% 0 0 / 9%);
-  --input:             oklch(100% 0 0 / 8%);
-  --ring:              oklch(76% 0.16 82 / 40%);
+  --border:            oklch(100% 0 0 / 10%);
+  --input:             oklch(100% 0 0 / 9%);
+  --ring:              oklch(80% 0.20 84 / 40%);
 
-  --sidebar:           oklch(7% 0.008 60);
-  --sidebar-foreground: oklch(94% 0.006 60);
-  --sidebar-primary:   oklch(76% 0.16 82);
-  --sidebar-primary-foreground: oklch(10% 0.01 60);
-  --sidebar-accent:    oklch(12% 0.012 60);
-  --sidebar-accent-foreground: oklch(94% 0.006 60);
-  --sidebar-border:    oklch(100% 0 0 / 8%);
-  --sidebar-ring:      oklch(76% 0.16 82 / 40%);
+  --sidebar:           oklch(7.5% 0.010 70);
+  --sidebar-foreground: oklch(93% 0.008 70);
+  --sidebar-primary:   oklch(80% 0.20 84);
+  --sidebar-primary-foreground: oklch(8% 0.012 70);
+  --sidebar-accent:    oklch(13% 0.014 70);
+  --sidebar-accent-foreground: oklch(93% 0.008 70);
+  --sidebar-border:    oklch(100% 0 0 / 9%);
+  --sidebar-ring:      oklch(80% 0.20 84 / 40%);
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -87,37 +87,38 @@
 .light {
   color-scheme: light;
 
-  --background:        oklch(97% 0.008 70);
-  --foreground:        oklch(12% 0.010 60);
-  --card:              oklch(100% 0.004 70);
-  --card-foreground:   oklch(12% 0.010 60);
-  --popover:           oklch(100% 0.004 70);
-  --popover-foreground: oklch(12% 0.010 60);
+  --background:        oklch(97.5% 0.010 75);
+  --foreground:        oklch(11% 0.012 65);
+  --card:              oklch(100% 0.006 75);
+  --card-foreground:   oklch(11% 0.012 65);
+  --popover:           oklch(100% 0.006 75);
+  --popover-foreground: oklch(11% 0.012 65);
 
-  --primary:           oklch(62% 0.16 78);
-  --primary-foreground: oklch(98% 0.004 70);
-  --primary-dim:       oklch(55% 0.14 78);
-  --primary-glow:      oklch(62% 0.16 78 / 20%);
+  /* Gold — slightly deeper for light mode readability */
+  --primary:           oklch(65% 0.20 78);
+  --primary-foreground: oklch(98% 0.004 75);
+  --primary-dim:       oklch(57% 0.18 76);
+  --primary-glow:      oklch(65% 0.20 78 / 22%);
 
-  --secondary:         oklch(93% 0.008 70);
-  --secondary-foreground: oklch(30% 0.010 60);
-  --muted:             oklch(93% 0.006 70);
-  --muted-foreground:  oklch(45% 0.008 60);
-  --accent:            oklch(91% 0.010 70);
-  --accent-foreground: oklch(12% 0.010 60);
-  --destructive:       oklch(58% 0.22 25);
-  --border:            oklch(0% 0 0 / 10%);
-  --input:             oklch(0% 0 0 / 6%);
-  --ring:              oklch(62% 0.16 78 / 35%);
+  --secondary:         oklch(93% 0.010 72);
+  --secondary-foreground: oklch(30% 0.012 65);
+  --muted:             oklch(93% 0.008 72);
+  --muted-foreground:  oklch(44% 0.010 65);
+  --accent:            oklch(91% 0.012 72);
+  --accent-foreground: oklch(11% 0.012 65);
+  --destructive:       oklch(57% 0.22 25);
+  --border:            oklch(0% 0 0 / 11%);
+  --input:             oklch(0% 0 0 / 7%);
+  --ring:              oklch(65% 0.20 78 / 35%);
 
-  --sidebar:           oklch(95% 0.008 70);
-  --sidebar-foreground: oklch(12% 0.010 60);
-  --sidebar-primary:   oklch(62% 0.16 78);
-  --sidebar-primary-foreground: oklch(98% 0.004 70);
-  --sidebar-accent:    oklch(91% 0.010 70);
-  --sidebar-accent-foreground: oklch(12% 0.010 60);
-  --sidebar-border:    oklch(0% 0 0 / 9%);
-  --sidebar-ring:      oklch(62% 0.16 78 / 35%);
+  --sidebar:           oklch(95% 0.010 73);
+  --sidebar-foreground: oklch(11% 0.012 65);
+  --sidebar-primary:   oklch(65% 0.20 78);
+  --sidebar-primary-foreground: oklch(98% 0.004 75);
+  --sidebar-accent:    oklch(91% 0.012 72);
+  --sidebar-accent-foreground: oklch(11% 0.012 65);
+  --sidebar-border:    oklch(0% 0 0 / 10%);
+  --sidebar-ring:      oklch(65% 0.20 78 / 35%);
 }
 
 /* ── Base ── */
@@ -158,7 +159,7 @@ html { font-size: 16px; }
     transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
   }
   .lumeo-card:hover {
-    border-color: oklch(from var(--primary) l c h / 30%);
+    border-color: oklch(from var(--primary) l c h / 35%);
     box-shadow: 0 8px 40px oklch(0% 0 0 / 30%);
   }
   .light .lumeo-card:hover {
@@ -167,13 +168,13 @@ html { font-size: 16px; }
 
   /* ── Gold gradient text ── */
   .gradient-text-gold {
-    background: linear-gradient(135deg, oklch(82% 0.18 88), oklch(68% 0.17 76));
+    background: linear-gradient(135deg, oklch(86% 0.20 90), oklch(72% 0.19 78));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .light .gradient-text-gold {
-    background: linear-gradient(135deg, oklch(62% 0.18 78), oklch(52% 0.16 70));
+    background: linear-gradient(135deg, oklch(62% 0.20 78), oklch(52% 0.18 72));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -208,7 +209,7 @@ html { font-size: 16px; }
     font-family: 'Outfit', sans-serif;
   }
   .lumeo-input:focus {
-    border-color: oklch(from var(--primary) l c h / 50%);
+    border-color: oklch(from var(--primary) l c h / 55%);
     box-shadow: 0 0 0 3px var(--primary-glow);
   }
   .lumeo-input::placeholder { color: var(--muted-foreground); opacity: 0.6; }
@@ -223,12 +224,13 @@ html { font-size: 16px; }
     font-size: 0.875rem;
     border: none;
     transition: opacity 150ms var(--ease-out), box-shadow 150ms var(--ease-out), transform 80ms;
-    box-shadow: 0 0 24px var(--primary-glow);
+    box-shadow: 0 2px 20px var(--primary-glow);
     font-family: 'Outfit', sans-serif;
   }
   .lumeo-btn:hover:not(:disabled) {
     opacity: 0.92;
-    box-shadow: 0 0 36px oklch(from var(--primary) l c h / 40%);
+    box-shadow: 0 4px 32px oklch(from var(--primary) l c h / 45%);
+    transform: translateY(-1px);
   }
   .lumeo-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
 
@@ -247,42 +249,8 @@ html { font-size: 16px; }
   .lumeo-btn-ghost:hover:not(:disabled) {
     color: var(--foreground);
     background: var(--accent);
-    border-color: oklch(from var(--primary) l c h / 25%);
+    border-color: oklch(from var(--primary) l c h / 30%);
   }
-}
-
-/* ── Aurora keyframes ── */
-@keyframes aurora-1 {
-  0%,100% { transform: translate(0%,0%) scale(1); opacity: 0.6; }
-  33% { transform: translate(-8%,6%) scale(1.1); opacity: 0.8; }
-  66% { transform: translate(5%,-8%) scale(0.92); opacity: 0.5; }
-}
-@keyframes aurora-2 {
-  0%,100% { transform: translate(0%,0%) scale(1.05); opacity: 0.5; }
-  40% { transform: translate(9%,4%) scale(0.9); opacity: 0.7; }
-  70% { transform: translate(-6%,-7%) scale(1.12); opacity: 0.4; }
-}
-@keyframes aurora-3 {
-  0%,100% { transform: translate(0%,0%) scale(0.95); opacity: 0.7; }
-  25% { transform: translate(10%,-5%) scale(1.08); opacity: 0.4; }
-  75% { transform: translate(-8%,8%) scale(1.03); opacity: 0.8; }
-}
-@keyframes aurora-4 {
-  0%,100% { transform: translate(0%,0%) scale(1.02); opacity: 0.4; }
-  50% { transform: translate(-12%,4%) scale(0.93); opacity: 0.6; }
-}
-@keyframes aurora-5 {
-  0%,100% { transform: translate(0%,0%) scale(1); opacity: 0.3; }
-  35% { transform: translate(7%,-10%) scale(1.15); opacity: 0.5; }
-  70% { transform: translate(-4%,6%) scale(0.88); opacity: 0.25; }
-}
-
-/* ── Particle float ── */
-@keyframes float-particle {
-  0%,100% { transform: translateY(0) translateX(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 0.8; }
-  100% { transform: translateY(-120px) translateX(30px); opacity: 0; }
 }
 
 /* ── Fade in ── */
@@ -292,18 +260,34 @@ html { font-size: 16px; }
 }
 .animate-fade-in-up { animation: fade-in-up 0.5s var(--ease-out) forwards; }
 
-/* ── Shimmer ── */
+/* ── Shimmer gold ── */
 @keyframes shimmer {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
 .shimmer-text {
-  background: linear-gradient(90deg, var(--primary) 0%, oklch(92% 0.12 90) 50%, var(--primary) 100%);
+  background: linear-gradient(90deg,
+    var(--primary) 0%,
+    oklch(92% 0.14 92) 40%,
+    oklch(88% 0.22 86) 50%,
+    oklch(92% 0.14 92) 60%,
+    var(--primary) 100%
+  );
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 3s linear infinite;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ── Word rotate animation (landing hero) ── */
+@keyframes word-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes word-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-12px); }
 }
 
 .transition-smooth { transition: all 200ms var(--ease-out); }
