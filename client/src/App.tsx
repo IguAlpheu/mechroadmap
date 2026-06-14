@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route, Switch } from "wouter";
+import { Route, Switch, Router as WouterRouter } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +13,9 @@ import LandingPage from "@/pages/LandingPage";
 import LoginPage from "@/pages/LoginPage";
 import Dashboard from "@/pages/Dashboard";
 import SkillView from "@/pages/SkillView";
+import AccountPage from "@/pages/AccountPage";
+import PrivacyPage from "@/pages/PrivacyPage";
+import TermsPage from "@/pages/TermsPage";
 import NotFound from "@/pages/NotFound";
 
 function useAuth() {
@@ -54,17 +57,28 @@ function Router({ authed, loading, logout }: { authed: boolean; loading: boolean
   }
 
   return (
-    <Switch hook={useHashLocation}>
-      <Route path="/" component={() => <LandingPage authed={authed} />} />
-      <Route path="/login" component={() => <LoginPage authed={authed} />} />
-      <Route path="/dashboard" component={() => (
-        <Protected authed={authed}><Dashboard onLogout={logout} /></Protected>
-      )} />
-      <Route path="/skill/:id" component={(params: { id: string }) => (
-        <Protected authed={authed}><SkillView skillId={params.id} onLogout={logout} /></Protected>
-      )} />
-      <Route component={NotFound} />
-    </Switch>
+    <WouterRouter hook={useHashLocation}>
+      <Switch>
+        <Route path="/" component={() => <LandingPage authed={authed} />} />
+        <Route path="/login" component={() => <LoginPage authed={authed} />} />
+        <Route path="/terms" component={TermsPage} />
+        <Route path="/privacy" component={PrivacyPage} />
+        <Route path="/dashboard" component={() => (
+          <Protected authed={authed}><Dashboard onLogout={logout} /></Protected>
+        )} />
+        <Route path="/account" component={() => (
+          <Protected authed={authed}><AccountPage /></Protected>
+        )} />
+        <Route path="/skill/:id">
+          {(params) => (
+            <Protected authed={authed}>
+              <SkillView skillId={params.id} onLogout={logout} />
+            </Protected>
+          )}
+        </Route>
+        <Route component={NotFound} />
+      </Switch>
+    </WouterRouter>
   );
 }
 

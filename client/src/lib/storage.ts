@@ -186,9 +186,57 @@ function dbRowToSkill(row: any): StoredSkill {
   };
 }
 
+export async function deleteAccount(): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("Not authenticated.");
+
+  const { error: progressError } = await supabase
+    .from("skill_progress")
+    .delete()
+    .eq("user_id", user.id);
+  if (progressError) throw new Error(progressError.message);
+
+  const { error: skillsError } = await supabase
+    .from("skills")
+    .delete()
+    .eq("user_id", user.id);
+  if (skillsError) throw new Error(skillsError.message);
+
+  const { error: authError } = await supabase.auth.signOut();
+  if (authError) throw new Error(authError.message);
+}
+
+export async function exportUserData(): Promise<any> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("Not authenticated.");
+
+  const { data: skills, error: skillsError } = await supabase
+    .from("skills")
+    .select("*")
+    .eq("user_id", user.id);
+  if (skillsError) throw new Error(skillsError.message);
+
+  const { data: progress, error: progressError } = await supabase
+    .from("skill_progress")
+    .select("*")
+    .eq("user_id", user.id);
+  if (progressError) throw new Error(progressError.message);
+
+  return {
+    user: {
+      id: user.id,
+      email: user.email,
+    },
+    skills: skills ?? [],
+    progress: progress ?? [],
+    exportedAt: new Date().toISOString(),
+  };
+}
+
 // ── Legacy no-ops (kept so old imports don't break) ───────────
 export function hasSession(): boolean {
   return false; // replaced by Supabase session
 }
 export function setSession(_active: boolean): void { /* noop */ }
 export function getAuth(): null { return null; }
+
