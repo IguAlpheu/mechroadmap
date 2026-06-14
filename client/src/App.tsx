@@ -18,6 +18,30 @@ import PrivacyPage from "@/pages/PrivacyPage";
 import TermsPage from "@/pages/TermsPage";
 import NotFound from "@/pages/NotFound";
 
+function usePushReminder() {
+  useEffect(() => {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    
+    // Check if user enabled reminders
+    const enabled = localStorage.getItem("lumeo_notif_enabled");
+    if (enabled !== "true") return;
+
+    // Check if we already sent one today
+    const today = new Date().toISOString().split("T")[0];
+    const lastSent = localStorage.getItem("lumeo_last_push_date");
+    if (lastSent === today) return;
+
+    // Send daily reminder
+    setTimeout(() => {
+      new Notification("Hora de Estudar! 🔥", {
+        body: "Mantenha sua ofensiva! Reserve 5 minutos para o seu aprendizado diário no Lumeo.",
+        icon: "/pwa-192x192.png",
+      });
+      localStorage.setItem("lumeo_last_push_date", today);
+    }, 5000); // Wait 5s after load to show
+  }, []);
+}
+
 function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -84,6 +108,7 @@ function Router({ authed, loading, logout }: { authed: boolean; loading: boolean
 
 export default function App() {
   const { authed, loading, logout } = useAuth();
+  usePushReminder();
 
   return (
     <ErrorBoundary>

@@ -1,6 +1,7 @@
 // ============================================================
 // Lumeo — Aurora Background (Canvas + CSS hybrid)
-// Breathtaking animated aurora with gold/white color palette
+// Dark: Violet/Indigo animated aurora
+// Light: Golden amber aurora — fully isolated palettes
 // ============================================================
 
 import { useEffect, useRef } from "react";
@@ -37,12 +38,11 @@ export default function AuroraBackground({
     resize();
     window.addEventListener("resize", resize);
 
-    // Check if light mode
     const isLight = () => document.documentElement.classList.contains("light");
 
-    // Noise function (simplex-like approximation)
+    // Noise helpers
     const hash = (n: number) => {
-      let x = Math.sin(n) * 43758.5453123;
+      const x = Math.sin(n) * 43758.5453123;
       return x - Math.floor(x);
     };
     const noise2d = (x: number, y: number) => {
@@ -60,165 +60,144 @@ export default function AuroraBackground({
       let v = 0, a = 0.5, freq = 1.8;
       for (let i = 0; i < octaves; i++) {
         v += a * noise2d(x * freq, y * freq);
-        a *= 0.5; freq *= 2.1;
+        a *= 0.5;
+        freq *= 2.1;
       }
       return v;
     };
 
-    // Aurora streaks
-    interface Streak {
-      phase: number;
-      speed: number;
-      yBase: number;
-      hue: number;
-      width: number;
-      amp: number;
-    }
+    // Dark mode: violet/indigo aurora streams
+    const darkStreams = [
+      { hue: 270, speed: 0.00018, amplitude: 0.28, yBase: 0.30, width: 0.55 },
+      { hue: 250, speed: 0.00022, amplitude: 0.22, yBase: 0.50, width: 0.45 },
+      { hue: 290, speed: 0.00015, amplitude: 0.32, yBase: 0.70, width: 0.40 },
+      { hue: 220, speed: 0.00020, amplitude: 0.18, yBase: 0.20, width: 0.35 },
+    ];
 
-    const streaks: Streak[] = Array.from({ length: 7 }, (_, i) => ({
-      phase: (i / 7) * Math.PI * 2,
-      speed: 0.0003 + i * 0.00008,
-      yBase: 0.15 + (i / 7) * 0.55,
-      hue: 75 + i * 6,       // gold range: 75–115
-      width: 0.08 + i * 0.03,
-      amp: 0.06 + i * 0.02,
-    }));
+    // Light mode: golden amber aurora streams
+    const lightStreams = [
+      { hue: 40,  speed: 0.00018, amplitude: 0.28, yBase: 0.30, width: 0.55 },
+      { hue: 30,  speed: 0.00022, amplitude: 0.22, yBase: 0.50, width: 0.45 },
+      { hue: 50,  speed: 0.00015, amplitude: 0.32, yBase: 0.70, width: 0.40 },
+      { hue: 35,  speed: 0.00020, amplitude: 0.18, yBase: 0.20, width: 0.35 },
+    ];
 
-    // Floating particles
-    interface Particle {
-      x: number; y: number; size: number;
-      speed: number; phase: number; opacity: number;
-    }
-    const particles: Particle[] = Array.from({ length: 40 }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      size: 1 + Math.random() * 2.5,
-      speed: 0.0002 + Math.random() * 0.0004,
-      phase: Math.random() * Math.PI * 2,
-      opacity: 0.2 + Math.random() * 0.6,
-    }));
+    // Dark mode: blob orbs (violet/purple)
+    const darkBlobs = [
+      { hue: 270, x: 0.25, y: 0.35, r: 0.30, speed: 0.00012 },
+      { hue: 245, x: 0.75, y: 0.60, r: 0.25, speed: 0.00016 },
+      { hue: 290, x: 0.50, y: 0.20, r: 0.20, speed: 0.00010 },
+    ];
+
+    // Light mode: golden blob orbs
+    const lightBlobs = [
+      { hue: 42, x: 0.25, y: 0.35, r: 0.30, speed: 0.00012 },
+      { hue: 35, x: 0.75, y: 0.60, r: 0.25, speed: 0.00016 },
+      { hue: 50, x: 0.50, y: 0.20, r: 0.20, speed: 0.00010 },
+    ];
 
     const draw = () => {
-      t += 0.006;
+      t += 1;
       ctx.clearRect(0, 0, W, H);
 
       const light = isLight();
+      const streams = light ? lightStreams : darkStreams;
+      const blobs = light ? lightBlobs : darkBlobs;
 
-      // ── Background gradient ──
-      const bgGrad = ctx.createRadialGradient(W * 0.5, H * 0.3, 0, W * 0.5, H * 0.5, W * 0.8);
-      if (light) {
-        bgGrad.addColorStop(0, "rgba(255,252,240,0)");
-        bgGrad.addColorStop(1, "rgba(240,230,210,0)");
-      } else {
-        bgGrad.addColorStop(0, "rgba(20,15,5,0)");
-        bgGrad.addColorStop(1, "rgba(5,4,2,0)");
-      }
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, W, H);
+      // ── Aurora streams ──
+      for (let si = 0; si < streams.length; si++) {
+        const s = streams[si];
+        const phase = t * s.speed;
+        const alpha = op * (0.4 + 0.25 * Math.sin(phase * 1.3 + si));
+        const hue = s.hue + Math.sin(phase * 0.5) * 15;
 
-      // ── Aurora streaks ──
-      streaks.forEach((s, si) => {
-        const phase = t * s.speed * 1000 + s.phase;
-        const noiseShift = fbm(t * 0.3 + si * 0.7, t * 0.2 + si * 0.5);
-        const yCenter = (s.yBase + Math.sin(phase * 0.7) * s.amp + (noiseShift - 0.5) * s.amp * 1.5) * H;
-        const bandH = s.width * H;
+        const x0 = 0, x1 = W;
+        const cx = W * 0.5;
+        const cy = H * (s.yBase + s.amplitude * Math.sin(phase + si));
 
-        const grad = ctx.createLinearGradient(0, yCenter - bandH, 0, yCenter + bandH);
-        const alpha = op * (0.3 + 0.25 * Math.sin(phase * 1.3 + si));
-        const hue = s.hue + Math.sin(phase * 0.5) * 12;
+        const grad = ctx.createLinearGradient(x0, cy, x1, cy);
 
         if (light) {
-          grad.addColorStop(0, `hsla(${hue},55%,55%,0)`);
-          grad.addColorStop(0.35, `hsla(${hue},60%,50%,${alpha * 0.4})`);
-          grad.addColorStop(0.5, `hsla(${hue},65%,48%,${alpha * 0.7})`);
-          grad.addColorStop(0.65, `hsla(${hue},60%,50%,${alpha * 0.4})`);
-          grad.addColorStop(1, `hsla(${hue},55%,55%,0)`);
+          // Golden/amber streaks for light mode — extremely soft, light, low saturation
+          grad.addColorStop(0, `hsla(${hue},50%,60%,0)`);
+          grad.addColorStop(0.35, `hsla(${hue},60%,65%,${alpha * 0.15})`);
+          grad.addColorStop(0.5, `hsla(${hue},65%,68%,${alpha * 0.25})`);
+          grad.addColorStop(0.65, `hsla(${hue},60%,65%,${alpha * 0.15})`);
+          grad.addColorStop(1, `hsla(${hue},50%,60%,0)`);
         } else {
-          grad.addColorStop(0, `hsla(${hue},70%,60%,0)`);
-          grad.addColorStop(0.35, `hsla(${hue},75%,65%,${alpha * 0.5})`);
-          grad.addColorStop(0.5, `hsla(${hue},80%,70%,${alpha})`);
-          grad.addColorStop(0.65, `hsla(${hue},75%,65%,${alpha * 0.5})`);
-          grad.addColorStop(1, `hsla(${hue},70%,60%,0)`);
+          // Violet/indigo streaks for dark mode — rich and vibrant
+          grad.addColorStop(0, `hsla(${hue},80%,55%,0)`);
+          grad.addColorStop(0.35, `hsla(${hue},85%,60%,${alpha * 0.5})`);
+          grad.addColorStop(0.5, `hsla(${hue},90%,65%,${alpha * 0.85})`);
+          grad.addColorStop(0.65, `hsla(${hue},85%,60%,${alpha * 0.5})`);
+          grad.addColorStop(1, `hsla(${hue},80%,55%,0)`);
         }
 
         ctx.save();
-        ctx.filter = `blur(${32 + si * 8}px)`;
 
-        // Wavy path
         ctx.beginPath();
         const steps = 60;
-        for (let i = 0; i <= steps; i++) {
-          const x = (i / steps) * W;
-          const nx = i / steps;
-          const waveFbm = fbm(nx * 2.5 + t * 0.4 + si, t * 0.25 + si * 1.1);
-          const waveY = yCenter + (waveFbm - 0.5) * bandH * 1.8 + Math.sin(nx * Math.PI * 3 + phase * 2) * bandH * 0.3;
-          if (i === 0) ctx.moveTo(x, waveY - bandH);
-          else ctx.lineTo(x, waveY - bandH);
+        for (let xi = 0; xi <= steps; xi++) {
+          const px = (xi / steps) * W;
+          const nx = px / W * 3.0;
+          const ny = fbm(nx + phase * 0.5, si * 1.7 + phase * 0.3) - 0.5;
+          const py = cy + ny * H * s.amplitude * 0.7;
+          const hw = W * s.width * 0.5;
+
+          if (xi === 0) {
+            ctx.moveTo(px, py - hw);
+          } else {
+            ctx.lineTo(px, py - hw);
+          }
         }
-        for (let i = steps; i >= 0; i--) {
-          const x = (i / steps) * W;
-          const nx = i / steps;
-          const waveFbm = fbm(nx * 2.5 + t * 0.4 + si, t * 0.25 + si * 1.1);
-          const waveY = yCenter + (waveFbm - 0.5) * bandH * 1.8 + Math.sin(nx * Math.PI * 3 + phase * 2) * bandH * 0.3;
-          ctx.lineTo(x, waveY + bandH);
+        for (let xi = steps; xi >= 0; xi--) {
+          const px = (xi / steps) * W;
+          const nx = px / W * 3.0;
+          const ny = fbm(nx + phase * 0.5, si * 1.7 + phase * 0.3) - 0.5;
+          const py = cy + ny * H * s.amplitude * 0.7;
+          const hw = W * s.width * 0.5;
+          ctx.lineTo(px, py + hw);
         }
         ctx.closePath();
         ctx.fillStyle = grad;
         ctx.fill();
         ctx.restore();
-      });
+      }
 
-      // ── Gold nebula blobs ──
-      const blobs = [
-        { x: 0.2, y: 0.3, r: 0.35, speed: 0.8, hue: 82 },
-        { x: 0.75, y: 0.2, r: 0.3, speed: 1.1, hue: 72 },
-        { x: 0.5, y: 0.7, r: 0.4, speed: 0.6, hue: 90 },
-      ];
-      blobs.forEach((b, i) => {
-        const bx = (b.x + Math.sin(t * b.speed * 0.4 + i) * 0.08) * W;
-        const by = (b.y + Math.cos(t * b.speed * 0.3 + i) * 0.06) * H;
-        const br = b.r * Math.min(W, H);
+      // ── Blob orbs ──
+      for (let bi = 0; bi < blobs.length; bi++) {
+        const b = blobs[bi];
+        const phase = t * b.speed;
+        const bx = W * (b.x + 0.12 * Math.sin(phase + bi * 1.3));
+        const by = H * (b.y + 0.10 * Math.cos(phase * 0.8 + bi));
+        const br = Math.min(W, H) * b.r;
+
         const bGrad = ctx.createRadialGradient(bx, by, 0, bx, by, br);
-        const ba = op * 0.12;
+        const bAlpha = op * (0.3 + 0.15 * Math.sin(phase * 1.1));
 
         if (light) {
-          bGrad.addColorStop(0, `hsla(${b.hue},60%,55%,${ba * 0.8})`);
-          bGrad.addColorStop(0.5, `hsla(${b.hue},55%,50%,${ba * 0.4})`);
-          bGrad.addColorStop(1, `hsla(${b.hue},50%,45%,0)`);
+          bGrad.addColorStop(0, `hsla(${b.hue},55%,70%,${bAlpha * 0.3})`);
+          bGrad.addColorStop(0.5, `hsla(${b.hue},50%,65%,${bAlpha * 0.12})`);
+          bGrad.addColorStop(1, `hsla(${b.hue},45%,60%,0)`);
         } else {
-          bGrad.addColorStop(0, `hsla(${b.hue},80%,65%,${ba})`);
-          bGrad.addColorStop(0.5, `hsla(${b.hue},70%,55%,${ba * 0.5})`);
-          bGrad.addColorStop(1, `hsla(${b.hue},60%,45%,0)`);
+          bGrad.addColorStop(0, `hsla(${b.hue},80%,60%,${bAlpha})`);
+          bGrad.addColorStop(0.5, `hsla(${b.hue},75%,50%,${bAlpha * 0.5})`);
+          bGrad.addColorStop(1, `hsla(${b.hue},70%,40%,0)`);
         }
 
         ctx.save();
-        ctx.filter = "blur(60px)";
         ctx.beginPath();
         ctx.arc(bx, by, br, 0, Math.PI * 2);
         ctx.fillStyle = bGrad;
         ctx.fill();
         ctx.restore();
-      });
-
-      // ── Floating particles (stars/dust) ──
-      if (!light) {
-        particles.forEach((p) => {
-          p.y -= p.speed;
-          p.x += Math.sin(t * 0.8 + p.phase) * 0.0003;
-          if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
-          const px = p.x * W, py = p.y * H;
-          const lifeAlpha = Math.min(p.y * 10, 1) * Math.min((1 - p.y) * 10, 1);
-          ctx.beginPath();
-          ctx.arc(px, py, p.size * 0.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255,240,180,${p.opacity * lifeAlpha * op * 0.7})`;
-          ctx.fill();
-        });
       }
 
       rafRef.current = requestAnimationFrame(draw);
     };
 
     rafRef.current = requestAnimationFrame(draw);
+
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
@@ -226,11 +205,11 @@ export default function AuroraBackground({
   }, [intensity]);
 
   return (
-    <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden>
+    <div className={`absolute inset-0 overflow-hidden ${className}`}>
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
-        style={{ opacity: 1 }}
+        style={{ filter: "blur(72px)", transform: "scale(1.15)", opacity: 0.95 }}
       />
     </div>
   );
