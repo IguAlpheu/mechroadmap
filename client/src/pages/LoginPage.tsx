@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useHashLocation as useLocation } from "wouter/use-hash-location";
-import { Zap, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react";
+import { Zap, Eye, EyeOff, ArrowLeft, ArrowRight, Loader2, Sparkles } from "lucide-react";
 import AuroraBackground from "@/components/AuroraBackground";
 import { signIn, signUp } from "@/lib/storage";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface LoginPageProps {
   authed: boolean;
@@ -29,19 +30,19 @@ export default function LoginPage({ authed }: LoginPageProps) {
   const handleSubmit = async () => {
     setError("");
     setSuccess("");
-    if (!email.trim() || !password) { setError("Please fill in all fields."); return; }
-    if (!email.includes("@")) { setError("Enter a valid email address."); return; }
+    if (!email.trim() || !password) { setError("Por favor, preencha todos os campos."); return; }
+    if (!email.includes("@")) { setError("Insira um endereço de e-mail válido."); return; }
 
     if (mode === "register") {
-      if (password.length < 6) { setError("Password must be at least 6 characters."); return; }
-      if (password !== confirmPass) { setError("Passwords don't match."); return; }
+      if (password.length < 6) { setError("A senha deve ter pelo menos 6 caracteres."); return; }
+      if (password !== confirmPass) { setError("As senhas não coincidem."); return; }
       setLoading(true);
       try {
         await signUp(email, password);
-        setSuccess("Account created! Check your email to confirm, then sign in.");
+        setSuccess("Conta criada com sucesso! Verifique seu e-mail para confirmar e depois faça login.");
         setMode("login");
       } catch (e: unknown) {
-        setError(e instanceof Error ? e.message : "Something went wrong.");
+        setError(e instanceof Error ? e.message : "Algo deu errado ao criar a conta.");
       } finally {
         setLoading(false);
       }
@@ -51,7 +52,7 @@ export default function LoginPage({ authed }: LoginPageProps) {
         await signIn(email, password);
         navigate("/dashboard");
       } catch (e: unknown) {
-        setError(e instanceof Error ? e.message : "Wrong email or password.");
+        setError(e instanceof Error ? e.message : "E-mail ou senha incorretos.");
       } finally {
         setLoading(false);
       }
@@ -59,87 +60,167 @@ export default function LoginPage({ authed }: LoginPageProps) {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 bg-background overflow-hidden">
+    <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden" style={{ background: "var(--background)" }}>
       <AuroraBackground intensity="low" />
-      <div className="starfield absolute inset-0 opacity-15" />
 
-      <button onClick={() => navigate("/")}
-        className="absolute top-5 left-5 z-10 flex items-center gap-2 text-sm text-white/35 hover:text-white/70 transition-colors">
-        <ArrowLeft className="w-4 h-4" /> Back
-      </button>
+      {/* Floating Header Back Button */}
+      <motion.button 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        onClick={() => navigate("/")}
+        className="absolute top-6 left-6 z-20 lumeo-btn-ghost px-4 py-2 text-xs flex items-center gap-1.5 font-bold"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" /> 
+        <span>Voltar</span>
+      </motion.button>
 
-      <div className="relative z-10 w-full max-w-sm"
-        style={{ opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(18px)", transition: "opacity 0.45s cubic-bezier(0.23,1,0.32,1), transform 0.45s cubic-bezier(0.23,1,0.32,1)" }}>
-        <div className="lumeo-card rounded-2xl p-8 space-y-6">
-          <div className="text-center space-y-3">
+      {/* Login Box wrapper */}
+      <motion.div 
+        initial={{ opacity: 0, y: 25, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 w-full max-w-sm"
+      >
+        <div className="absolute inset-0 bg-primary/5 rounded-[2.5rem] blur-xl -z-10 transform translate-y-3" />
+        
+        {/* Double-Bezel Card */}
+        <div className="lumeo-card p-8 space-y-6 bg-card/60 backdrop-blur-md">
+          
+          {/* Logo & Headline */}
+          <div className="text-center space-y-2.5">
             <div className="flex justify-center">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg, oklch(60% 0.22 240), var(--primary-dim)))", boxShadow: "0 0 20px var(--primary) / 35%)" }}>
-                <Zap className="w-5 h-5 text-white" strokeWidth={2.5} />
-              </div>
+              <motion.div 
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                className="w-11 h-11 rounded-2xl flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, var(--primary), var(--primary-dim))", boxShadow: "0 0 20px var(--primary-glow)" }}
+              >
+                <Zap className="w-5 h-5" style={{ color: "var(--primary-foreground)" }} strokeWidth={2.5} />
+              </motion.div>
             </div>
-            <div>
-              <h1 className="text-white font-bold text-xl">Lumeo</h1>
-              <p className="text-white/35 text-sm mt-0.5">
-                {mode === "register" ? "Create your account" : "Welcome back"}
+            <div className="space-y-1">
+              <h1 className="font-extrabold text-2xl tracking-tight" style={{ color: "var(--foreground)" }}>Lumeo</h1>
+              <p className="text-muted-foreground text-xs font-medium" style={{ color: "var(--muted-foreground)" }}>
+                {mode === "register" ? "Crie sua conta para começar" : "Acesse seu hub de aprendizado"}
               </p>
             </div>
           </div>
 
-          <div className="space-y-3">
+          {/* Form Fields */}
+          <div className="space-y-4">
             <div>
-              <label className="block text-xs text-white/35 mb-1.5 font-medium">Email</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: "var(--muted-foreground)", opacity: 0.8 }}>E-mail</label>
+              <input 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                placeholder="you@email.com" className="lumeo-input" autoFocus disabled={loading} />
+                placeholder="seu@email.com" 
+                className="lumeo-input" 
+                autoFocus 
+                disabled={loading} 
+              />
             </div>
+            
             <div>
-              <label className="block text-xs text-white/35 mb-1.5 font-medium">Password</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: "var(--muted-foreground)", opacity: 0.8 }}>Senha</label>
               <div className="relative">
-                <input type={showPass ? "text" : "password"} value={password}
+                <input 
+                  type={showPass ? "text" : "password"} 
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                  placeholder="••••••••" className="lumeo-input pr-10" disabled={loading} />
-                <button type="button" onClick={() => setShowPass((p) => !p)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 hover:text-white/60 transition-colors">
+                  placeholder="••••••••" 
+                  className="lumeo-input pr-10" 
+                  disabled={loading} 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setShowPass((p) => !p)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
-            {mode === "register" && (
-              <div>
-                <label className="block text-xs text-white/35 mb-1.5 font-medium">Confirm password</label>
-                <input type="password" value={confirmPass} onChange={(e) => setConfirmPass(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                  placeholder="••••••••" className="lumeo-input" disabled={loading} />
-              </div>
-            )}
+
+            {/* Confirm Password (register mode) */}
+            <AnimatePresence>
+              {mode === "register" && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5 mt-2" style={{ color: "var(--muted-foreground)", opacity: 0.8 }}>Confirmar Senha</label>
+                  <input 
+                    type="password" 
+                    value={confirmPass} 
+                    onChange={(e) => setConfirmPass(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                    placeholder="••••••••" 
+                    className="lumeo-input" 
+                    disabled={loading} 
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
+          {/* Feedback Messages */}
           {error && (
-            <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">{error}</p>
+            <p className="text-xs font-medium text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-3.5 py-2.5">{error}</p>
           )}
           {success && (
-            <p className="text-xs text-green-400 bg-green-500/10 border border-green-500/20 rounded-xl px-3 py-2">{success}</p>
+            <p className="text-xs font-medium text-green-400 bg-green-500/10 border border-green-500/20 rounded-xl px-3.5 py-2.5">{success}</p>
           )}
 
-          <button onClick={handleSubmit} disabled={loading}
-            className="lumeo-btn w-full flex items-center justify-center gap-2">
-            {loading
-              ? <><Loader2 className="w-4 h-4 animate-spin" />{mode === "register" ? "Creating..." : "Signing in..."}</>
-              : mode === "register" ? "Create account" : "Sign in"}
+          {/* Submit Button */}
+          <button 
+            onClick={handleSubmit} 
+            disabled={loading}
+            className="lumeo-btn w-full h-11 text-sm gap-2 font-bold transition-all relative overflow-hidden group"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>{mode === "register" ? "Criando..." : "Entrando..."}</span>
+              </>
+            ) : (
+              <>
+                {mode === "register" ? "Criar conta" : "Entrar"}
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </>
+            )}
           </button>
 
-          <p className="text-center text-xs text-white/30">
-            {mode === "register"
-              ? <>Already have an account?{" "}<button onClick={() => { setMode("login"); setError(""); setSuccess(""); }} className="text-primary hover:underline">Sign in</button></>
-              : <>No account?{" "}<button onClick={() => { setMode("register"); setError(""); setSuccess(""); }} className="text-primary hover:underline">Create one</button></>}
+          {/* Toggle login/register mode */}
+          <p className="text-center text-xs text-muted-foreground font-medium pt-2">
+            {mode === "register" ? (
+              <>
+                Já possui uma conta?{" "}
+                <button onClick={() => { setMode("login"); setError(""); setSuccess(""); }} className="text-primary hover:underline font-bold transition-colors">
+                  Faça login
+                </button>
+              </>
+            ) : (
+              <>
+                Não tem uma conta?{" "}
+                <button onClick={() => { setMode("register"); setError(""); setSuccess(""); }} className="text-primary hover:underline font-bold transition-colors">
+                  Crie uma
+                </button>
+              </>
+            )}
           </p>
         </div>
-        <p className="text-center text-xs text-white/15 mt-5">
-          Your data is securely stored in the cloud.
+
+        <p className="text-center text-[10px] text-muted-foreground/60 mt-6 font-medium">
+          Seus dados de estudo são sincronizados de forma segura na nuvem.
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }
+
