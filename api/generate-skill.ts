@@ -12,7 +12,6 @@ const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_MODELS = [
   "openai/gpt-oss-120b",
   "qwen/qwen3.8-27b",
-  "llama-3.3-70b-versatile",
 ];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

@@ -40,7 +40,6 @@ function devApiPlugin(env: Record<string, string>): Plugin {
               const GROQ_MODELS = [
                 "openai/gpt-oss-120b",
                 "qwen/qwen3.8-27b",
-                "llama-3.3-70b-versatile",
               ];
 
               const prompt = `You are an expert in creating structured, inspiring study plans and learning roadmaps.
