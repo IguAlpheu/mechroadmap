@@ -68,7 +68,7 @@ export default function TermsPage() {
 
         <Section title="3. Conteúdo Gerado por Inteligência Artificial">
           <p>
-            O Lumeo utiliza o modelo de linguagem <strong>LLaMA 3.3 (Groq)</strong> para gerar planos de estudo
+            O Lumeo utiliza modelos avançados de inteligência artificial via <strong>Groq Cloud</strong> para gerar planos de estudo
             personalizados com base no nome da habilidade informada pelo usuário. O conteúdo gerado é fornecido
             exclusivamente para fins informativos e educacionais.
           </p>

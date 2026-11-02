@@ -93,7 +93,7 @@ export default function PrivacyPage() {
           <p>
             Ao criar uma habilidade no Lumeo, o <strong>nome da habilidade</strong> (e somente ele) é enviado para os
             servidores da <strong>Groq, Inc.</strong>, empresa sediada nos <strong>Estados Unidos da América</strong>,
-            para processamento pelo modelo de linguagem LLaMA 3.3. Esta transferência é necessária para a prestação
+            para processamento pelos modelos de inteligência artificial via Groq Cloud. Esta transferência é necessária para a prestação
             do serviço e ocorre com base no consentimento explícito do usuário (Art. 7, I c/c Art. 33, II).
           </p>
           <p>

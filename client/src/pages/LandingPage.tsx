@@ -90,7 +90,7 @@ export default function LandingPage({ authed }: { authed: boolean }) {
 
       {/* Nav */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-5 max-w-6xl mx-auto backdrop-blur-xs">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -102,7 +102,7 @@ export default function LandingPage({ authed }: { authed: boolean }) {
           </div>
           <span className="font-bold text-xl tracking-tight" style={{ color: "var(--foreground)" }}>Lumeo</span>
         </motion.div>
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -118,9 +118,9 @@ export default function LandingPage({ authed }: { authed: boolean }) {
 
       {/* Hero Section */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 pt-12 pb-24 md:py-32 grid grid-cols-1 md:grid-cols-12 gap-16 items-center min-h-[85vh]">
-        
+
         {/* Left: Text & Action */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -133,7 +133,7 @@ export default function LandingPage({ authed }: { authed: boolean }) {
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6.5xl font-black leading-[1.08] tracking-tight" style={{ color: "var(--foreground)" }}>
-            Domine qualquer <br />
+            Domine qualquer habilidade <br />
             <span className="gradient-text-gold inline-block min-w-[260px] relative">
               <AnimatePresence mode="wait">
                 <motion.span
@@ -162,7 +162,7 @@ export default function LandingPage({ authed }: { authed: boolean }) {
               placeholder="Ex: Tocar piano, Programar em Rust..."
               className="lumeo-input flex-1 text-base h-12" />
             <button onClick={start} className="lumeo-btn h-12 gap-2 text-sm font-bold group relative overflow-hidden px-6">
-              Começar Grátis 
+              Começar Grátis
               <motion.div
                 className="inline-block"
                 whileHover={{ x: 3 }}
@@ -179,17 +179,17 @@ export default function LandingPage({ authed }: { authed: boolean }) {
         </motion.div>
 
         {/* Right: Interactive Sandbox Card */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 40, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="md:col-span-5 relative"
         >
           <div className="absolute inset-0 bg-primary/10 rounded-[2.5rem] blur-2xl -z-10 transform translate-x-4 translate-y-4" />
-          
+
           {/* Double-Bezel Card Outer */}
           <div className="lumeo-card p-6 space-y-6 bg-card/45 backdrop-blur-md">
-            
+
             {/* Interactive Header */}
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
@@ -210,8 +210,8 @@ export default function LandingPage({ authed }: { authed: boolean }) {
             {/* Steps Sandbox */}
             <div className="space-y-2.5">
               {demoSteps.map((s) => (
-                <div 
-                  key={s.id} 
+                <div
+                  key={s.id}
                   onClick={() => toggleDemoStep(s.id)}
                   className="flex items-center justify-between p-3.5 rounded-xl border border-border bg-background/25 cursor-pointer transition-all hover:bg-background/70 group"
                 >
@@ -223,10 +223,10 @@ export default function LandingPage({ authed }: { authed: boolean }) {
                         <Circle className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
                       )}
                     </div>
-                    <span 
+                    <span
                       className="text-xs sm:text-sm transition-all"
-                      style={{ 
-                        color: s.done ? "var(--muted-foreground)" : "var(--foreground)", 
+                      style={{
+                        color: s.done ? "var(--muted-foreground)" : "var(--foreground)",
                         textDecoration: s.done ? "line-through" : "none",
                         opacity: s.done ? 0.6 : 1
                       }}
@@ -242,7 +242,7 @@ export default function LandingPage({ authed }: { authed: boolean }) {
             {/* Bottom Status bar */}
             <div className="pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-border">
               <div className="flex items-center gap-3">
-                <button 
+                <button
                   onClick={(e) => { e.stopPropagation(); setDemoTimerActive(!demoTimerActive); }}
                   className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${demoTimerActive ? "bg-red-500/15 text-red-400 border border-red-500/35" : "bg-primary/15 text-primary border border-primary/30"}`}
                 >
@@ -285,7 +285,7 @@ export default function LandingPage({ authed }: { authed: boolean }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
+
             {/* Bento 1: AI Cronogramas */}
             <div className="lumeo-card p-7 space-y-4 md:col-span-2">
               <div className="flex items-center justify-between">
@@ -364,7 +364,7 @@ export default function LandingPage({ authed }: { authed: boolean }) {
 
       {/* CTA Final */}
       <section className="relative z-10 py-28 px-6 text-center border-t border-border/40 bg-gradient-to-b from-transparent to-primary/5">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
